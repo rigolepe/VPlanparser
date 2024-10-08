@@ -1,0 +1,426 @@
+{
+    "$schema": "http://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "definitions": {
+        "Coordinates2D": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "number",
+                    "description": "X-coordinate"
+                },
+                {
+                    "type": "number",
+                    "description": "Y-coordinate"
+                }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+        },
+        "Color": {
+            "type": "integer",
+            "description": "Color index (usually 1 to 255)"
+        }
+    },
+    "properties": {
+        "Point": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "Point"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier, originally the DXF handle"
+                },
+                "layer": {
+                    "type": "string",
+                    "description": "Layer on which the entity resides"
+                },
+                "linetype": {
+                    "type": "string",
+                    "description": "Linetype for the entity"
+                },
+                "color": {
+                    "$ref": "#/definitions/Color"
+                },
+                "coordinates": {
+                    "$ref": "#/definitions/Coordinates2D"
+                }
+            },
+            "required": [
+                "type",
+                "id",
+                "layer",
+                "coordinates"
+            ]
+        },
+        "Line": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "Line"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier, originally the DXF handle"
+                },
+                "layer": {
+                    "type": "string",
+                    "description": "Layer on which the entity resides"
+                },
+                "linetype": {
+                    "type": "string",
+                    "description": "Linetype for the entity"
+                },
+                "color": {
+                    "$ref": "#/definitions/Color"
+                },
+                "coordinates": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Coordinates2D"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "description": "Start and end points"
+                }
+            },
+            "required": [
+                "type",
+                "id",
+                "layer",
+                "coordinates"
+            ]
+        },
+        "Polyline": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "Polyline"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier, originally the DXF handle"
+                },
+                "layer": {
+                    "type": "string",
+                    "description": "Layer on which the entity resides"
+                },
+                "linetype": {
+                    "type": "string",
+                    "description": "Linetype for the entity"
+                },
+                "color": {
+                    "$ref": "#/definitions/Color"
+                },
+                "coordinates": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Coordinates2D"
+                    },
+                    "minItems": 2,
+                    "description": "List of vertex points"
+                },
+                "is_closed": {
+                    "type": "boolean",
+                    "description": "Whether the polyline is closed"
+                }
+            },
+            "required": [
+                "type",
+                "id",
+                "layer",
+                "coordinates",
+                "is_closed"
+            ]
+        },
+        "Solid": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "Solid"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier, originally the DXF handle"
+                },
+                "layer": {
+                    "type": "string",
+                    "description": "Layer on which the entity resides"
+                },
+                "linetype": {
+                    "type": "string",
+                    "description": "Linetype for the entity"
+                },
+                "color": {
+                    "$ref": "#/definitions/Color"
+                },
+                "coordinates": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Coordinates2D"
+                    },
+                    "minItems": 3,
+                    "maxItems": 4,
+                    "description": "Vertices of the solid"
+                },
+                "extrusion": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    },
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "description": "Extrusion vector in 3D space"
+                }
+            },
+            "required": [
+                "type",
+                "id",
+                "layer",
+                "coordinates"
+            ]
+        },
+        "Circle": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "Circle"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier, originally the DXF handle"
+                },
+                "layer": {
+                    "type": "string",
+                    "description": "Layer on which the entity resides"
+                },
+                "linetype": {
+                    "type": "string",
+                    "description": "Linetype for the entity"
+                },
+                "color": {
+                    "$ref": "#/definitions/Color"
+                },
+                "center": {
+                    "$ref": "#/definitions/Coordinates2D"
+                },
+                "radius": {
+                    "type": "number",
+                    "description": "Radius of the circle"
+                }
+            },
+            "required": [
+                "type",
+                "id",
+                "layer",
+                "center",
+                "radius"
+            ]
+        },
+        "Arc": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "Arc"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier, originally the DXF handle"
+                },
+                "layer": {
+                    "type": "string",
+                    "description": "Layer on which the entity resides"
+                },
+                "linetype": {
+                    "type": "string",
+                    "description": "Linetype for the entity"
+                },
+                "color": {
+                    "$ref": "#/definitions/Color"
+                },
+                "center": {
+                    "$ref": "#/definitions/Coordinates2D"
+                },
+                "radius": {
+                    "type": "number",
+                    "description": "Radius of the arc"
+                },
+                "start_angle": {
+                    "type": "number",
+                    "description": "Start angle of the arc in degrees"
+                },
+                "end_angle": {
+                    "type": "number",
+                    "description": "End angle of the arc in degrees"
+                }
+            },
+            "required": [
+                "type",
+                "id",
+                "layer",
+                "center",
+                "radius",
+                "start_angle",
+                "end_angle"
+            ]
+        },
+        "Text": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "Text"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier, originally the DXF handle"
+                },
+                "layer": {
+                    "type": "string",
+                    "description": "Layer on which the entity resides"
+                },
+                "linetype": {
+                    "type": "string",
+                    "description": "Linetype for the entity"
+                },
+                "color": {
+                    "$ref": "#/definitions/Color"
+                },
+                "coordinates": {
+                    "$ref": "#/definitions/Coordinates2D"
+                },
+                "height": {
+                    "type": "number",
+                    "description": "Height of the text"
+                },
+                "text": {
+                    "type": "string",
+                    "description": "Text content"
+                },
+                "rotation": {
+                    "type": "number",
+                    "description": "Rotation of the text in degrees"
+                },
+                "width": {
+                    "type": "number",
+                    "description": "Width of the text"
+                },
+                "style": {
+                    "type": "string",
+                    "description": "Text style"
+                }
+            },
+            "required": [
+                "type",
+                "id",
+                "layer",
+                "coordinates",
+                "height",
+                "text"
+            ]
+        },
+        "Block": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "Block"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Name of the block"
+                },
+                "entities": {
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/properties/Point"
+                            },
+                            {
+                                "$ref": "#/properties/Line"
+                            },
+                            {
+                                "$ref": "#/properties/Polyline"
+                            },
+                            {
+                                "$ref": "#/properties/Solid"
+                            },
+                            {
+                                "$ref": "#/properties/Circle"
+                            },
+                            {
+                                "$ref": "#/properties/Arc"
+                            },
+                            {
+                                "$ref": "#/properties/Text"
+                            },
+                            {
+                                "$ref": "#/properties/Block"
+                            } 
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "type",
+                "id",
+                "entities"
+            ]
+        },
+        "Insert": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "Insert"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier, originally the DXF handle"
+                },
+                "layer": {
+                    "type": "string",
+                    "description": "Layer on which the entity resides"
+                },
+                "linetype": {
+                    "type": "string",
+                    "description": "Linetype for the entity"
+                },
+                "color": {
+                    "$ref": "#/definitions/Color"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the block being inserted"
+                },
+                "coordinates": {
+                    "$ref": "#/definitions/Coordinates2D"
+                },
+                "xscale": {
+                    "type": "number",
+                    "description": "Scaling factor in the X direction"
+                },
+                "yscale": {
+                    "type": "number",
+                    "description": "Scaling factor in the Y direction"
+                },
+                "zscale": {
+                    "type": "number",
+                    "description": "Scaling factor in the Z direction"
+                },
+                "rotation": {
+                    "type": "number",
+                    "description": "Rotation of the block in degrees"
+                }
+            },
+            "required": [
+                "type",
+                "id",
+                "layer",
+                "name",
+                "coordinates"
+            ]
+        }
+    },
+    "additionalProperties": false
+}
