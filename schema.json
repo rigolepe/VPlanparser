@@ -356,8 +356,11 @@
                                 "$ref": "#/properties/Text"
                             },
                             {
-                                "$ref": "#/properties/Block"
-                            } 
+                                "$ref": "#/properties/Insert"
+                            },
+                            {
+                                "$ref": "#/properties/AttDef"
+                            }
                         ]
                     }
                 }
@@ -411,6 +414,12 @@
                 "rotation": {
                     "type": "number",
                     "description": "Rotation of the block in degrees"
+                },
+                "attribs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/properties/Attrib"
+                    }
                 }
             },
             "required": [
@@ -419,6 +428,146 @@
                 "layer",
                 "name",
                 "coordinates"
+            ]
+        },
+        "AttDef": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "AttDef"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier, originally the DXF handle"
+                },
+                "layer": {
+                    "type": "string",
+                    "description": "Layer on which the entity resides"
+                },
+                "linetype": {
+                    "type": "string",
+                    "description": "Linetype for the entity"
+                },
+                "color": {
+                    "$ref": "#/definitions/Color"
+                },
+                "coordinates": {
+                    "$ref": "#/definitions/Coordinates2D"
+                },
+                "tag": {
+                    "type": "string",
+                    "description": "Tag"
+                },
+                "prompt": {
+                    "type": "string",
+                    "description": "Prompt"
+                },
+                "text": {
+                    "type": "string",
+                    "description": "Text content"
+                },
+                "flags": {
+                    "type": "string",
+                    "description": "Text content"
+                },
+                "xscale": {
+                    "type": "number",
+                    "description": "Scaling factor in the X direction"
+                },
+                "yscale": {
+                    "type": "number",
+                    "description": "Scaling factor in the Y direction"
+                },
+                "zscale": {
+                    "type": "number",
+                    "description": "Scaling factor in the Z direction"
+                },
+                "rotation": {
+                    "type": "number",
+                    "description": "Rotation of the block in degrees"
+                },
+                "height": {
+                    "type": "number",
+                    "description": "Height of the text"
+                },
+                "width": {
+                    "type": "number",
+                    "description": "Width of the text"
+                },
+                "style": {
+                    "type": "string",
+                    "description": "Text style"
+                }
+            },
+            "required": [
+                "type",
+                "id",
+                "layer",
+                "tag",
+                "coordinates"
+            ]
+        },
+        "Attrib": {
+            "type": "object",
+            "description": "Defines a values given to an AttDef entity in an Insert.",
+            "properties": {
+                "type": {
+                    "const": "Attrib"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier, originally the DXF handle"
+                },
+                "layer": {
+                    "type": "string",
+                    "description": "Layer on which the entity resides"
+                },
+                "tag": {
+                    "type": "string",
+                    "description": "Tag"
+                },
+                "text": {
+                    "type": "string",
+                    "description": "Text content"
+                },
+                "flags": {
+                    "type": "string",
+                    "description": "Text content"
+                },
+                "xscale": {
+                    "type": "number",
+                    "description": "Scaling factor in the X direction"
+                },
+                "yscale": {
+                    "type": "number",
+                    "description": "Scaling factor in the Y direction"
+                },
+                "zscale": {
+                    "type": "number",
+                    "description": "Scaling factor in the Z direction"
+                },
+                "rotation": {
+                    "type": "number",
+                    "description": "Rotation of the block in degrees"
+                },
+                "height": {
+                    "type": "number",
+                    "description": "Height of the text"
+                },
+                "width": {
+                    "type": "number",
+                    "description": "Width of the text"
+                },
+                "style": {
+                    "type": "string",
+                    "description": "Text style"
+                }
+            },
+            "required": [
+                "type",
+                "id",
+                "tag",
+                "text"
             ]
         }
     },
