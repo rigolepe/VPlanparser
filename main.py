@@ -76,7 +76,8 @@ def process_entities(entities, block_name = None):
                     if (key not in ["insert"]): 
                         attrib_data["attributes"][key] = convert_value(value)
                 attrib_data["attributes"]["coordinates"] = convert_value(attrib.dxf.insert)
-                if attrib_data["attributes"]["text"]: # we veronderstellen hier dat een attrib dat geen text heeft, niet ingevuld is en dus weinig zin heeft
+                # hieronder veronderstellen we dat een attrib dat geen text heeft, niet ingevuld werd door de gebruiker en dus weinig zin heeft
+                if attrib_data["attributes"]["text"]: 
                     attribs_data_list.append(attrib_data)
             entity_data["attributes"]["attribs"] = attribs_data_list
             entity_data["attributes"]["coordinates"] = convert_value(entity.dxf.insert)

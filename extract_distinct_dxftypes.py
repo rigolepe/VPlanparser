@@ -8,6 +8,7 @@ def get_distinct_entity_types_count(dxf_file):
     msp = doc.modelspace()
     
     entity_counts = {}
+    layers = []
     
     for block in doc.blocks:
         print(block.name)
@@ -17,7 +18,12 @@ def get_distinct_entity_types_count(dxf_file):
             if entity_type in entity_counts:
                 entity_counts[entity_type] += 1
             else:
-                entity_counts[entity_type] = 1    
+                entity_counts[entity_type] = 1   
+            if block_entity.dxftype() == "ATTDEF":
+                print(f" - {block_entity.dxf.tag}")
+            layer = block_entity.dxf.layer
+            if not layer in layers:
+                layers.append(layer)
 
     for entity in msp:
         entity_type = entity.dxftype()
@@ -25,11 +31,20 @@ def get_distinct_entity_types_count(dxf_file):
             entity_counts[entity_type] += 1
         else:
             entity_counts[entity_type] = 1
+        layer = entity.dxf.layer
+        if not layer in layers:
+            layers.append(layer)
 
-    return entity_counts
+    return entity_counts, layers
 
-entity_counts = get_distinct_entity_types_count(dxf_file)
+entity_counts, layers = get_distinct_entity_types_count(dxf_file)
 
+print()
 print("Distinct entity types and their counts:")
 for entity_type, count in entity_counts.items():
     print(f"{entity_type}: {count}")
+
+print()
+print("Distinct layers:")
+for layer in layers:
+    print(f"{layer}")

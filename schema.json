@@ -427,7 +427,8 @@
                 "id",
                 "layer",
                 "name",
-                "coordinates"
+                "coordinates",
+                "attribs"
             ]
         },
         "AttDef": {
