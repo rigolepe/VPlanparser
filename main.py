@@ -82,7 +82,7 @@ def process_entities(entities, block_name = None):
             entity_data["attributes"]["attribs"] = attribs_data_list
             entity_data["attributes"]["coordinates"] = convert_value(entity.dxf.insert)
         elif entity.dxftype() == "ATTRIB":
-            "See entity.attribs() in INSERT entities."
+            "See entity.attribs in INSERT entities."
     
         # Append this entity's data to the main list
         entities_data.append(entity_data)

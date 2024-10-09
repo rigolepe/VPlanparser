@@ -23,11 +23,11 @@
         }
     },
     "properties": {
-        "Point": {
+        "POINT": {
             "type": "object",
             "properties": {
                 "type": {
-                    "const": "Point"
+                    "const": "POINT"
                 },
                 "id": {
                     "type": "string",
@@ -55,11 +55,11 @@
                 "coordinates"
             ]
         },
-        "Line": {
+        "LINE": {
             "type": "object",
             "properties": {
                 "type": {
-                    "const": "Line"
+                    "const": "LINE"
                 },
                 "id": {
                     "type": "string",
@@ -93,11 +93,11 @@
                 "coordinates"
             ]
         },
-        "Polyline": {
+        "POLYLINE": {
             "type": "object",
             "properties": {
                 "type": {
-                    "const": "Polyline"
+                    "const": "POLYLINE"
                 },
                 "id": {
                     "type": "string",
@@ -135,11 +135,11 @@
                 "is_closed"
             ]
         },
-        "Solid": {
+        "SOLID": {
             "type": "object",
             "properties": {
                 "type": {
-                    "const": "Solid"
+                    "const": "SOLID"
                 },
                 "id": {
                     "type": "string",
@@ -182,11 +182,11 @@
                 "coordinates"
             ]
         },
-        "Circle": {
+        "CIRCLE": {
             "type": "object",
             "properties": {
                 "type": {
-                    "const": "Circle"
+                    "const": "CIRCLE"
                 },
                 "id": {
                     "type": "string",
@@ -219,11 +219,11 @@
                 "radius"
             ]
         },
-        "Arc": {
+        "ARC": {
             "type": "object",
             "properties": {
                 "type": {
-                    "const": "Arc"
+                    "const": "ARC"
                 },
                 "id": {
                     "type": "string",
@@ -266,11 +266,11 @@
                 "end_angle"
             ]
         },
-        "Text": {
+        "TEXT": {
             "type": "object",
             "properties": {
                 "type": {
-                    "const": "Text"
+                    "const": "TEXT"
                 },
                 "id": {
                     "type": "string",
@@ -320,13 +320,17 @@
                 "text"
             ]
         },
-        "Block": {
+        "BLOCK": {
             "type": "object",
             "properties": {
                 "type": {
-                    "const": "Block"
+                    "const": "BLOCK"
                 },
                 "id": {
+                    "type": "string",
+                    "description": "Id of the block"
+                },
+                "block_name": {
                     "type": "string",
                     "description": "Name of the block"
                 },
@@ -371,11 +375,11 @@
                 "entities"
             ]
         },
-        "Insert": {
+        "INSERT": {
             "type": "object",
             "properties": {
                 "type": {
-                    "const": "Insert"
+                    "const": "INSERT"
                 },
                 "id": {
                     "type": "string",
@@ -431,11 +435,11 @@
                 "attribs"
             ]
         },
-        "AttDef": {
+        "ATTDEF": {
             "type": "object",
             "properties": {
                 "type": {
-                    "const": "AttDef"
+                    "const": "ATTDEF"
                 },
                 "id": {
                     "type": "string",
@@ -508,12 +512,12 @@
                 "coordinates"
             ]
         },
-        "Attrib": {
+        "ATTRIB": {
             "type": "object",
             "description": "Defines a values given to an AttDef entity in an Insert.",
             "properties": {
                 "type": {
-                    "const": "Attrib"
+                    "const": "ATTRIB"
                 },
                 "id": {
                     "type": "string",
