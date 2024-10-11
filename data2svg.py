@@ -64,6 +64,8 @@ def draw_line(entity, svg_group, dwg):
 
 def draw_polyline(entity, svg_group, dwg):
     points = [(x, y) for x, y in entity['coordinates']]
+    if entity['is_closed']:
+        points.append(points[0])  # Close the polyline
     svg_group.add(dwg.polyline(points=points, stroke="black", fill="none", stroke_width=DEFAULT_STROKE_WIDTH))
 
 def draw_solid(entity, svg_group, dwg):
@@ -172,6 +174,8 @@ def draw_insert(entity, svg_group, blocks, dwg):
         elif block_entity['type'] == 'POLYLINE':
             positions = [transform_point(coords, transform['scale'],  transform['rotation'], transform['translation']) for coords in block_entity['coordinates']]
             points = [(x, y) for x, y in positions]
+            if block_entity['is_closed']:
+                points.append(points[0])  # Close the polyline
             svg_group.add(dwg.polyline(points=points, stroke="black", fill="none", stroke_width=DEFAULT_STROKE_WIDTH))
         # Add handling for other block_entity types as needed
 
