@@ -203,7 +203,7 @@
                 "color": {
                     "$ref": "#/definitions/Color"
                 },
-                "center": {
+                "coordinates": {
                     "$ref": "#/definitions/Coordinates2D"
                 },
                 "radius": {
@@ -240,7 +240,7 @@
                 "color": {
                     "$ref": "#/definitions/Color"
                 },
-                "center": {
+                "coordinates": {
                     "$ref": "#/definitions/Coordinates2D"
                 },
                 "radius": {

@@ -29,23 +29,26 @@ def process_entities(entities, empty_block_names):
         }
         
         # Collect common DXF attributes dynamically
-        skip_keys = ["location", "vtx0", "vtx1", "vtx2", "vtx3", "start", "end", "insert", "_entity", "owner", "handle"] # location and vtxX are part the coordinates
+        skip_keys = ["location", "vtx0", "vtx1", "vtx2", "vtx3", "start", "end", "insert", "_entity", "owner", "handle", "center"] # location and vtxX are part the coordinates
         for key, value in vars(entity.dxf).items():
             if (key not in skip_keys): 
-                entity_data[key] = convert_value(value)
+                if (key in ['rotation', 'xscale', 'yscale', 'radius', 'start_angle', 'end_angle', 'color']):
+                    entity_data[key] = float(value)
+                else:
+                    entity_data[key] = convert_value(value)
 
         if entity.dxftype() == "POINT":
             entity_data["coordinates"] = convert_value(entity.dxf.location)
         elif entity.dxftype() == "LINE":
             entity_data["coordinates"] = [convert_value(entity.dxf.start), convert_value(entity.dxf.end)]
         elif entity.dxftype() == "CIRCLE":
-            entity_data["center"] = convert_value(entity.dxf.center)
-            entity_data["radius"] = convert_value(entity.dxf.radius)
+            entity_data["coordinates"] = convert_value(entity.dxf.center)
+            entity_data["radius"] = float(entity.dxf.radius)
         elif entity.dxftype() == "TEXT":
             entity_data["text"] = entity.dxf.text
             entity_data["coordinates"] = convert_value(entity.dxf.insert)
         elif entity.dxftype() == "ARC":
-            ""
+            entity_data["coordinates"] = convert_value(entity.dxf.center)
         elif entity.dxftype() == "POLYLINE":
             points = []
             # Iterate through all vertices in the POLYLINE entity
@@ -70,7 +73,10 @@ def process_entities(entities, empty_block_names):
                 }
                 for key, value in vars(attrib.dxf).items():
                     if (key not in ["insert", "_entity", "handle"]): 
-                        attrib_data[key] = convert_value(value)
+                        if (key in ['rotation', 'xscale', 'yscale', 'radius', 'start_angle', 'end_angle', 'color']):
+                            attrib_data[key] = float(value)
+                        else:
+                            attrib_data[key] = convert_value(value)
                 attrib_data["coordinates"] = convert_value(attrib.dxf.insert)
                 # hieronder veronderstellen we dat een attrib dat geen text heeft, niet ingevuld werd door de gebruiker en dus weinig zin heeft
                 if attrib_data["text"]: 
