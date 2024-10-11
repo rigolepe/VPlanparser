@@ -58,31 +58,55 @@ def draw_point(entity, svg_group, dwg):
     x, y = entity['coordinates']
     svg_group.add(dwg.circle(center=(x, y), r=2, fill="black", stroke_width=DEFAULT_STROKE_WIDTH))
 
-def draw_line(entity, svg_group, dwg):
-    (x1, y1), (x2, y2) = entity['coordinates']
-    svg_group.add(dwg.line(start=(x1, y1), end=(x2, y2), stroke="black", stroke_width=DEFAULT_STROKE_WIDTH))
+def draw_line(entity, svg_group, dwg, transform = None):
+    if transform:
+        start = transform_point(entity['coordinates'][0], transform['scale'], transform['rotation'], transform['translation'])
+        end = transform_point(entity['coordinates'][1], transform['scale'], transform['rotation'], transform['translation'])
+    else:
+        start = entity['coordinates'][0]
+        end = entity['coordinates'][1]
+    svg_group.add(dwg.line(start=start, end=end, stroke="black", stroke_width=DEFAULT_STROKE_WIDTH))
 
-def draw_polyline(entity, svg_group, dwg):
-    points = [(x, y) for x, y in entity['coordinates']]
+def draw_polyline(entity, svg_group, dwg, transform = None):
+    if transform:
+        positions = [transform_point(coords, transform['scale'],  transform['rotation'], transform['translation']) for coords in entity['coordinates']]
+    else:
+        positions = entity['coordinates']
+    points = [(x, y) for x, y in positions]
     if entity['is_closed']:
         points.append(points[0])  # Close the polyline
     svg_group.add(dwg.polyline(points=points, stroke="black", fill="none", stroke_width=DEFAULT_STROKE_WIDTH))
 
-def draw_solid(entity, svg_group, dwg):
-    points = [(x, y) for x, y in entity['coordinates']]
+def draw_solid(entity, svg_group, dwg, transform = None):
+    if transform:
+        positions = [transform_point(coords, transform['scale'],  transform['rotation'], transform['translation']) for coords in entity['coordinates']]
+    else:
+        positions = entity['coordinates']
+    points = [(x, y) for x, y in positions]
     svg_group.add(dwg.polygon(points=points, fill="gray", stroke_width=DEFAULT_STROKE_WIDTH))
 
-def draw_circle(entity, svg_group, dwg):
-    x, y = entity['coordinates']
-    radius = entity['radius']
+def draw_circle(entity, svg_group, dwg, transform = None):
+    if transform:
+        center = transform_point(entity['coordinates'], transform['scale'], transform['rotation'], transform['translation'])
+        radius = entity['radius'] * transform['scale'][0]  # Assuming uniform scaling
+    else:
+        center = entity['coordinates']
+        radius = entity['radius']
+    x, y = center
     svg_group.add(dwg.circle(center=(x, y), r=radius, stroke="black", fill="none", stroke_width=DEFAULT_STROKE_WIDTH))
 
-def draw_arc(entity, svg_group, dwg):
-    x, y = [n for n in entity['coordinates']]
-    radius = entity['radius']
-    start_angle = entity['start_angle']
-    end_angle = entity['end_angle']
-    
+def draw_arc(entity, svg_group, dwg, transform = None):
+    if transform:
+        center = transform_point(entity['coordinates'], transform['scale'], transform['rotation'], transform['translation'])
+        radius = entity['radius'] * transform['scale'][0]  # Assuming uniform scaling
+        start_angle = entity['start_angle'] + transform['rotation']
+        end_angle = entity['end_angle'] + transform['rotation']
+    else:
+        center = entity['coordinates']
+        radius = entity['radius']
+        start_angle = entity['start_angle']
+        end_angle = entity['end_angle']
+    x, y = [n for n in center]
     # Approximate arc using path
     start_x = x + radius * math.cos(math.radians(start_angle))
     start_y = y + radius * math.sin(math.radians(start_angle))
@@ -94,8 +118,12 @@ def draw_arc(entity, svg_group, dwg):
     svg_group.add(dwg.path(d=f"M {start_x},{start_y} A {radius},{radius} 0 {large_arc_flag},1 {end_x},{end_y}",
                            stroke="black", fill="none", stroke_width=DEFAULT_STROKE_WIDTH))
 
-def draw_text(entity, svg_group, dwg):
-    x, y = entity['coordinates']
+def draw_text(entity, svg_group, dwg, transform = None):
+    if transform:
+        text_position = transform_point(entity['coordinates'], transform['scale'], transform['rotation'], transform['translation'])
+    else:
+        text_position = entity['coordinates']
+    x, y = text_position
     text = entity['text']
     rotation = entity.get('rotation', 0) 
     # in de transformatie hieronder is de volgorde van de rotate, scale en translate belangrijk!
@@ -146,38 +174,18 @@ def draw_insert(entity, svg_group, blocks, dwg):
                 svg_group.add(dwg.text(attrib_text, insert=text_position, 
                                  transform=f'rotate({text_rotation},{text_position[0]},{text_position[1]}) scale(1, -1) translate(0, {-2 * text_position[1]})',
                                  font_size=block_entity.get('height', 10)))
-
         elif block_entity['type'] == 'LINE':
-            start = transform_point(block_entity['coordinates'][0], transform['scale'], 
-                                    transform['rotation'], transform['translation'])
-            end = transform_point(block_entity['coordinates'][1], transform['scale'], 
-                                  transform['rotation'], transform['translation'])
-            svg_group.add(dwg.line(start=start, end=end, stroke='black', stroke_width=DEFAULT_STROKE_WIDTH))
-
+            draw_line(block_entity, svg_group, dwg, transform)
         elif block_entity['type'] == 'CIRCLE':
-            center = transform_point(block_entity['coordinates'], transform['scale'], 
-                                     transform['rotation'], transform['translation'])
-            radius = block_entity['radius'] * transform['scale'][0]  # Assuming uniform scaling
-            svg_group.add(dwg.circle(center=center, r=radius, stroke='black', fill='none', stroke_width=DEFAULT_STROKE_WIDTH))
-
+            draw_circle(block_entity, svg_group, dwg, transform)
         elif block_entity['type'] == 'TEXT':
-            position = transform_point(block_entity['coordinates'], transform['scale'], 
-                                       transform['rotation'], transform['translation'])
-            rotation = block_entity.get('rotation', 0) 
-            svg_group.add(dwg.text(block_entity['text'], insert=position, 
-                             transform=f'rotate({rotation},{position[0]},{position[1]}) scale(1, -1) translate(0, {-2 * position[1]})',
-                             font_size=block_entity.get('height', 10), stroke_width=DEFAULT_STROKE_WIDTH))
+            draw_text(block_entity, svg_group, dwg, transform)
         elif block_entity['type'] == 'SOLID':
-            positions = [transform_point(coords, transform['scale'],  transform['rotation'], transform['translation']) for coords in block_entity['coordinates']]
-            points = [(x, y) for x, y in positions]
-            svg_group.add(dwg.polygon(points=points, fill="gray", stroke_width=DEFAULT_STROKE_WIDTH))
+            draw_solid(block_entity, svg_group, dwg, transform)
         elif block_entity['type'] == 'POLYLINE':
-            positions = [transform_point(coords, transform['scale'],  transform['rotation'], transform['translation']) for coords in block_entity['coordinates']]
-            points = [(x, y) for x, y in positions]
-            if block_entity['is_closed']:
-                points.append(points[0])  # Close the polyline
-            svg_group.add(dwg.polyline(points=points, stroke="black", fill="none", stroke_width=DEFAULT_STROKE_WIDTH))
-        # Add handling for other block_entity types as needed
+            draw_polyline(block_entity, svg_group, dwg, transform)
+        elif block_entity['type'] == 'ARC':
+            draw_arc(block_entity, svg_group, dwg, transform)
 
 
 def main(input_file, output_file):
